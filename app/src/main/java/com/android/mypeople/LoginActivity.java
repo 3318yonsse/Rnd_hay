@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.sql.Timestamp;
+
 public class LoginActivity extends AppCompatActivity {
 
     final static String TAG = "LoginActivity";
@@ -24,6 +26,24 @@ public class LoginActivity extends AppCompatActivity {
     Intent intent;
     InputMethodManager inputMethodManager;
     LinearLayout ll_hide;
+    String macIP;
+    String urlAddrLogin = null;
+    String urlAddrLoginCheck = null;
+
+
+    String uId, uPw;
+    int count = 0;
+    int count2 = 0;
+    Bean_user bean = new Bean_user();
+
+    // 리스트로 보내는 값.
+    int setSeqno;
+    String setId;
+    String setPw;
+    String setName;
+    String setTel;
+    Timestamp setDeleteDate;
+    Timestamp setInsertDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
         edtIP = findViewById(R.id.edt_ip);
+        macIP = edtIP.getText().toString();
+        Log.v(TAG, "macIP : " + macIP);
+
+
+
+
         btn_login = findViewById(R.id.login_btn_login);
 
         et_id = findViewById(R.id.login_et_id);
@@ -64,24 +90,66 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
     // 로그인 화면 onClickListener
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String tempIP = edtIP.getText().toString();
-
+            uId = et_id.getText().toString();
+            uPw= et_pw.getText().toString();
             switch (v.getId()){
 
                 // 로그인 버튼 //
                 case R.id.login_btn_login :
-                    Toast.makeText(LoginActivity.this, "준비중", Toast.LENGTH_SHORT).show();
+
+                    urlAddrLogin = "http://" + macIP + ":8080/mypeople/loginCheck.jsp?userid="+uId+"&userpw="+uPw;
+                    urlAddrLoginCheck = "http://"+ macIP +":8080/mypeople/loginCheck_count.jsp?userid="+uId+"&userpw="+uPw;
+
+                    Log.v(TAG, "uId : " + uId);
+                    Log.v(TAG, "uPw : " + uPw);
+
+
+
+                    count = loginCount();
+                    if (count == 1) {
+                        connectGetData(); // 유저정보 받아옴
+                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+
+
+                        // 값을 Intent로 보내줌
+                        intent.putExtra("uSeqno",setSeqno);
+                        intent.putExtra("uId",setId);
+                        intent.putExtra("uPw",setPw);
+                        intent.putExtra("uName",setName);
+                        intent.putExtra("uTel",setTel);
+                        intent.putExtra("uDeleteDate",setDeleteDate);
+                        intent.putExtra("uInsertDate",setInsertDate);
+                        Log.v(TAG, "여기기랑 :  " + setSeqno + setId +setPw+setName+setTel+setDeleteDate+setInsertDate);
+                        startActivity(intent);
+
+
+
+                    }else{
+                        Toast.makeText(LoginActivity.this, "회원정보를 확인해주세요", Toast.LENGTH_SHORT).show();
+                    }
                     break;
 
-                // 아이디 찾기로 이동 //
+
+
+                    // 아이디 찾기로 이동 //
                 case R.id.login_tv_findid :
                     intent = new Intent(LoginActivity.this, FindIDActivity.class);
                     startActivity(intent);
                     break;
+
+
+
 
                 // 비번 찾기로 이동 //
                 case R.id.login_tv_findpw :
@@ -108,6 +176,59 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+    // 해당 로그인 아이디 비번이 있으면 로그인 가능.
+    private void connectGetData(){
+
+        try {
+            NetworkTask_youngjae networkTask_youngjae = new NetworkTask_youngjae(LoginActivity.this, urlAddrLogin, "login");
+            Object obj = networkTask_youngjae.execute().get();
+            bean = (Bean_user) obj;
+
+            setSeqno = bean.getuSeqno();
+            setId = bean.getuId();
+            setPw = bean.getuPw();
+            setName = bean.getuName();
+            setTel = bean.getuTel();
+            setDeleteDate = bean.getuDeleteDate();
+            setInsertDate = bean.getuInsertDate();
+
+
+        }catch (Exception e){
+           e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // 로그인 할 정보가 있나 count
+    private int loginCount(){
+        try {
+            NetworkTask_youngjae networkTask_youngjae = new NetworkTask_youngjae(LoginActivity.this, urlAddrLoginCheck, "loginCount");
+            Object obj = networkTask_youngjae.execute().get();
+
+            count = (int) obj;
+            Log.v("여기","loginCount : " + count);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return count;
+    }
 
 
 

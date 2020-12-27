@@ -15,7 +15,7 @@ public class CUDNetworkTask extends AsyncTask<Integer, String, Void> {
     final static String TAG = "CUDNetworkTask";
     Context context = null;
     String mAddr = null;
-//    ProgressDialog progressDialog = null;
+    ProgressDialog progressDialog = null;
 
     public CUDNetworkTask(Context context, String mAddr) {
         this.context = context;
@@ -26,11 +26,11 @@ public class CUDNetworkTask extends AsyncTask<Integer, String, Void> {
     @Override
     protected void onPreExecute() {
         Log.v(TAG, "onPreExecute()");
-//        progressDialog = new ProgressDialog(context);
-//        progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
-//        progressDialog.setTitle("Create/Update/Delete");
-//        progressDialog.setMessage("Working...");
-//        progressDialog.show();
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("Create/Update/Delete");
+        progressDialog.setMessage("Working...");
+        progressDialog.show();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class CUDNetworkTask extends AsyncTask<Integer, String, Void> {
     protected void onPostExecute(Void aVoid) {
         Log.v(TAG, "onPostExecute()");
         super.onPostExecute(aVoid);
-//        progressDialog.dismiss();
+        progressDialog.dismiss();
     }
 
     @Override

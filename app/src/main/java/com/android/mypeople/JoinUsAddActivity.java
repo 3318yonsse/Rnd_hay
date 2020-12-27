@@ -36,7 +36,7 @@ public class JoinUsAddActivity extends AppCompatActivity {
     InputMethodManager inputMethodManager ;
     LinearLayout ll_hide;
     String pwVaildation = "^.*(?=^.{8,20}$)(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$";
-    String telVaildation = "^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$";
+    String telVaildation = "^\\d{3}-\\d{3,4}-\\d{4}$";
     String nameVaildation = "^[a-zA-Zㄱ-ㅎ가-힣]+$";
 
 
@@ -147,7 +147,7 @@ public class JoinUsAddActivity extends AppCompatActivity {
                     tv_pwcheck.setText("일치합니다.");
                 }
                 else
-                    tv_pwcheck.setText("");
+                    tv_pwcheck.setText("일치하지 않습니다");
             }
         });
 
@@ -165,8 +165,8 @@ public class JoinUsAddActivity extends AppCompatActivity {
         //                                                                    //
         //                                                                    //
         ////////////////////////////////////////////////////////////////////////
+//        et_tel.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         et_tel.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-
 
 
 
@@ -218,7 +218,8 @@ public class JoinUsAddActivity extends AppCompatActivity {
 
 
 
-            if(!test.matches(pwVaildation) || test.equals("")) {
+
+            if(!test.matches(pwVaildation) || test.equals("") || !uPw.equals(uPwCheck)) {
                 new AlertDialog.Builder(JoinUsAddActivity.this)
                         .setTitle("패스워드를 확인하세요")
                         .setPositiveButton("확인", null)
@@ -229,7 +230,7 @@ public class JoinUsAddActivity extends AppCompatActivity {
                         .setTitle("전화번호를 확인하세요")
                         .setPositiveButton("확인", null)
                         .show();
-            }else if(test3.matches(nameVaildation) ||test3.equals("") || !uPw.equals(uPwCheck)){
+            }else if(!test3.matches(nameVaildation) ||test3.equals("") ){
                 new AlertDialog.Builder(JoinUsAddActivity.this)
                         .setTitle("이름을 확인하세요")
                         .setPositiveButton("확인", null)
@@ -244,9 +245,14 @@ public class JoinUsAddActivity extends AppCompatActivity {
 //            // 실행이 안됨. 확인 필요
 //           Toast.makeText(JoinUsAddActivity.this, registId + "님 가입을 축하합니다!", Toast.LENGTH_LONG).show();
 
+
+
             intent = new Intent(JoinUsAddActivity.this, LoginActivity.class);
+
             startActivity(intent);
+
             }
+
         }
     };
 

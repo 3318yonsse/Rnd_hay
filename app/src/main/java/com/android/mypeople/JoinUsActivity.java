@@ -28,6 +28,10 @@ public class JoinUsActivity extends AppCompatActivity {
     String macIP;
     InputMethodManager inputMethodManager ;
     LinearLayout ll_hide;
+    String urlAddrloginduplicationCheck = null;
+
+    int count = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,12 @@ public class JoinUsActivity extends AppCompatActivity {
 
 
 
+
         // 이메일 입력 및 계속하기 버튼. DB저장 X
         btn_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
 
                 // 입력받은 이메일(ID)를 추가정보 입력페이지로 넘김.
@@ -58,20 +64,37 @@ public class JoinUsActivity extends AppCompatActivity {
                 Log.v(TAG, "et_idsend : " + et_idsend);
 
 
+
+
+                Log.v(TAG, "urlAddrloginduplicationCheck : " + urlAddrloginduplicationCheck);
+
+
+
                 String edyo = et_id.getText().toString();
 
                 if(edyo.equals("") || !android.util.Patterns.EMAIL_ADDRESS.matcher(edyo).matches()){
-                    new AlertDialog.Builder(JoinUsActivity.this)
-                            .setTitle("입력 정보를 확인하세요")
-                            .setPositiveButton("확인",null)
-                            .show();
+                    tv_idcheck.setText("입력정보를 확인해주세요");
+
+
                 } else {
-                    intent = new Intent(JoinUsActivity.this, JoinUsAddActivity.class);
-                    // 입력받은 이메일 넘김.
-                    intent.putExtra("et_idsend", et_idsend);
-                    intent.putExtra("macIP", macIP);  // IP주소를 보내줌.
-                    Log.v(TAG, "macIP123 : " + macIP);
-                    startActivity(intent);
+
+                    urlAddrloginduplicationCheck = "http://"+macIP+":8080/mypeople/loginduplicationCheck.jsp?userid="+edyo;
+                    count = loginduplicationCheck();
+
+                    if(count == 0){
+                        intent = new Intent(JoinUsActivity.this, JoinUsAddActivity.class);
+                        // 입력받은 이메일 넘김.
+                        intent.putExtra("et_idsend", et_idsend);
+                        intent.putExtra("macIP", macIP);  // IP주소를 보내줌.
+                        Log.v(TAG, "macIP123 : " + macIP);
+                        startActivity(intent);
+                    }else{
+                        tv_idcheck.setText("중복된 아이디 입니다.");
+                    }
+
+
+
+
                 }
             }
         });
@@ -90,5 +113,21 @@ public class JoinUsActivity extends AppCompatActivity {
                 inputMethodManager.hideSoftInputFromWindow(ll_hide.getWindowToken(),0);
             }
         });
+    }
+
+    private int loginduplicationCheck(){
+        try {
+            NetworkTask_youngjae networkTask2 = new NetworkTask_youngjae(JoinUsActivity.this, urlAddrloginduplicationCheck, "useridCheck");
+            Object obj = networkTask2.execute().get();
+
+            count = (int) obj;
+            Log.v("여기","loginCount : " + count);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return count;
     }
 }

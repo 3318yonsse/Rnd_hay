@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Bean_friendslist> data = null;
     private RecyclerAdapter adapter = null;
 
+    String TAG = "MainActivity";
     BottomAppBar bab;
     boolean isCenter=true;
     Spinner spinner_field = null;
