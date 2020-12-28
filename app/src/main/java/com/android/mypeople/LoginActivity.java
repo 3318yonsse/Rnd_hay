@@ -130,6 +130,8 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("uTel",setTel);
                         intent.putExtra("uDeleteDate",setDeleteDate);
                         intent.putExtra("uInsertDate",setInsertDate);
+                        intent.putExtra("action", "Show_List");
+                        intent.putExtra("macIP", tempIP);  // IP주소를 보내줌.
                         Log.v(TAG, "여기기랑 :  " + setSeqno + setId +setPw+setName+setTel+setDeleteDate+setInsertDate);
                         startActivity(intent);
 
@@ -145,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                     // 아이디 찾기로 이동 //
                 case R.id.login_tv_findid :
                     intent = new Intent(LoginActivity.this, FindIDActivity.class);
+                    intent.putExtra("macIP", tempIP);
                     startActivity(intent);
                     break;
 

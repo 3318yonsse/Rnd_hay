@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="핸드폰 번호를 입력하세요."
-            android:inputType="textPassword"
+            android:inputType="phone"
             android:padding="10dp"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint"
@@ -67,15 +67,16 @@
 
 
 
-        <TextView
-            android:id="@+id/findid_tv_telcheck"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="일치하는 핸드폰번호가 없습니다."
-            android:textColor="#ED5C5C"
-            android:layout_marginLeft="10dp"
+<!--        <TextView-->
+<!--            android:visibility="invisible"-->
+<!--            android:id="@+id/findid_tv_telcheck"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="일치하는 핸드폰번호가 없습니다."-->
+<!--            android:textColor="#ED5C5C"-->
+<!--            android:layout_marginLeft="10dp"-->
 
-            />
+<!--            />-->
 
 
 

@@ -1,6 +1,7 @@
 package com.android.mypeople;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.sql.Timestamp;
+import java.util.concurrent.ExecutionException;
 
 public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
 
@@ -24,7 +26,9 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
     String where = null;
     int loginCheck = 20;
     int useridCheck = 0;
+    int userIdFind = 0;
     Bean_user bean_user = null;
+    String result = null;
 
 
     // Constructor
@@ -42,6 +46,7 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader =null;
+
 
         try{
             URL url = new URL(mAddr);
@@ -74,6 +79,11 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
                 if(where.equals("loginCount")){
                     parserLoginCheck(stringBuffer.toString());
                 }
+                // ID 찾기
+                if(where.equals("useridFind")) {
+                   result = parserUserIdFInd(stringBuffer.toString());
+                }
+
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -86,6 +96,7 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
             }catch (Exception e){
                 e.printStackTrace();
             }
+
         }
 
         // login action 이면 logincheck 리턴
@@ -97,6 +108,9 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
         }
         if(where.equals("loginCount")){
             return loginCheck;
+        }
+        if(where.equals("useridFind")){
+            return result;
         }
         return null;
     }
@@ -186,6 +200,30 @@ public class NetworkTask_youngjae extends AsyncTask<Integer, String, Object> {
             }
     }
 
+    private String parserUserIdFInd(String s){
+        Log.v(TAG,"parserUserIdFInd()");
+        String finduserid = null;
+
+        try {
+
+            JSONObject jsonObject = new JSONObject(s);
+            finduserid = jsonObject.getString("uTel");
+//            JSONArray jsonArray = new JSONArray(jsonObject.getString("user_info"));
+
+//            for (int i = 0; i < jsonArray.length(); i++){
+//                JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
+//                finduserid = jsonObject1.getString("uId");
+//                Log.v(TAG, "finduserid : " + finduserid);
+//            }
+//
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return finduserid;
+    }
 
 
 } // ----------------------------------
